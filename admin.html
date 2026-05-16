@@ -44,62 +44,23 @@ footer{text-align:center;margin-top:40px;color:#6b7280;font-size:13px}
 </nav>
 
 <div class="card">
-<h2>添加新视频</h2>
+<h2>提示：当前为固定视频模式，新增视频需修改index.html代码后上传</h2>
 <input type="text" id="title" placeholder="输入视频标题">
 <input type="text" id="url" placeholder="输入MP4视频播放链接">
-<button class="btn btn-add" onclick="addVideo()">添加视频</button>
+<button class="btn btn-add" onclick="alert('请把视频链接手动加到index.html的list数组里，再上传部署')">添加视频</button>
 </div>
 
 <div class="card">
-<h2>视频列表管理</h2>
-<div id="list"></div>
+<h2>当前已部署视频</h2>
+<div id="list">
+<div class="item">
+  <div class="item-title">虎牙周童潼ASMR 答谢会舞蹈</div>
+  <div class="item-url">https://huggingface.co/datasets/rui1995/my-video-files/resolve/main/%E8%99%8E%E7%89%99%E5%91%A8%E7%AB%A5%E6%BD%BCASMR%20%E7%AD%94%E8%B0%A2%E4%BC%9A%E8%88%9E%E8%B9%88--2.mp4</div>
+</div>
+</div>
 </div>
 
 <footer>© 2026 高清视频点播 · 后台管理系统</footer>
 </div>
-
-<script>
-const KEY="video_list";
-function loadList(){
-  const list=JSON.parse(localStorage.getItem(KEY))||[];
-  const box=document.getElementById("list");
-  if(list.length===0){box.innerHTML="<div class='empty'>暂无视频，请添加</div>";return;}
-  let html="";
-  list.forEach((item,i)=>{
-    html+=`
-    <div class="item">
-      <div class="item-title">${item.title}</div>
-      <div class="item-url">${item.url}</div>
-      <button class="btn btn-edit" onclick="editVideo(${i})">修改标题</button>
-      <button class="btn btn-del" onclick="delVideo(${i})">删除</button>
-    </div>`;
-  });
-  box.innerHTML=html;
-}
-function addVideo(){
-  const t=document.getElementById("title").value.trim();
-  const u=document.getElementById("url").value.trim();
-  if(!t||!u){alert("请填写标题和播放链接");return}
-  const list=JSON.parse(localStorage.getItem(KEY))||[];
-  list.push({title:t,url:u});
-  localStorage.setItem(KEY,JSON.stringify(list));
-  document.getElementById("title").value="";
-  document.getElementById("url").value="";
-  loadList();alert("添加成功，首页自动同步");
-}
-function editVideo(i){
-  const list=JSON.parse(localStorage.getItem(KEY))||[];
-  const nt=prompt("输入新标题",list[i].title);
-  if(nt&&nt.trim()){list[i].title=nt.trim();localStorage.setItem(KEY,JSON.stringify(list));loadList();}
-}
-function delVideo(i){
-  if(!confirm("确定删除？"))return;
-  const list=JSON.parse(localStorage.getItem(KEY))||[];
-  list.splice(i,1);
-  localStorage.setItem(KEY,JSON.stringify(list));
-  loadList();
-}
-window.onload=loadList;
-</script>
 </body>
 </html>
