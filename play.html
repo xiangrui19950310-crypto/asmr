@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>正在播放</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Roboto,system-ui,sans-serif}
+body{background:#0f1117;color:#e5e7eb;padding:20px}
+.container{max-width:1200px;margin:0 auto}
+
+nav{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;background:#1a1d26;border-radius:14px;margin-bottom:30px;box-shadow:0 4px 20px rgba(0,0,0,0.2)}
+.logo{font-size:22px;font-weight:700;color:#f43f5e}
+.back{color:#cbd5e1;text-decoration:none;padding:8px 14px;border-radius:8px;background:#272b38;transition:0.25s}
+.back:hover{background:#33394a;color:#fff}
+
+.title{font-size:22px;font-weight:500;margin-bottom:20px;padding:0 4px}
+.player-box{width:100%;background:#000;border-radius:14px;overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,0.4)}
+video{width:100%;display:block}
+.info{margin-top:20px;padding:16px 20px;background:#1a1d26;border-radius:14px;color:#9ca3af;font-size:14px}
+footer{text-align:center;margin-top:60px;color:#6b7280;font-size:13px}
+</style>
+</head>
+<body>
+<div class="container">
+<nav>
+<div class="logo">高清视频点播</div>
+<a href="index.html" class="back">← 返回首页</a>
+</nav>
+
+<div class="title" id="playTitle">加载中...</div>
+<div class="player-box">
+<video id="player" controls controlsList="nodownload" preload="auto"></video>
+</div>
+<div class="info">视频地址自动加载 · 禁止下载 · 自适应播放</div>
+
+<footer>© 2026 高清视频点播</footer>
+</div>
+
+<script>
+const params=new URLSearchParams(window.location.search);
+const vUrl=params.get("v");
+const vTitle=params.get("t");
+document.getElementById("playTitle").innerText=vTitle||"未知视频";
+if(vUrl)document.getElementById("player").src=vUrl;
+</script>
+</body>
+</html>

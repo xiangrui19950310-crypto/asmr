@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>视频管理后台</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Roboto,system-ui,sans-serif}
+body{background:#0f1117;color:#e5e7eb;padding:20px}
+.container{max-width:1100px;margin:0 auto}
+
+nav{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;background:#1a1d26;border-radius:14px;margin-bottom:30px;box-shadow:0 4px 20px rgba(0,0,0,0.2)}
+.logo{font-size:22px;font-weight:700;color:#f43f5e}
+.nav-links a{color:#cbd5e1;text-decoration:none;margin-left:12px;padding:8px 14px;border-radius:8px;background:#272b38;transition:0.25s}
+.nav-links a:hover{background:#33394a;color:#fff}
+
+.card{background:#1a1d26;border-radius:14px;padding:26px;margin-bottom:24px;box-shadow:0 4px 20px rgba(0,0,0,0.15)}
+.card h2{margin-bottom:20px;font-size:18px;color:#f3f4f6}
+input{width:100%;padding:14px 16px;margin-bottom:14px;background:#272b38;border:1px solid #33394a;border-radius:10px;color:#e5e7eb;font-size:15px}
+input:focus{outline:none;border-color:#f43f5e}
+.btn{padding:12px 20px;border:none;border-radius:10px;font-size:15px;cursor:pointer;transition:0.25s;margin-right:10px}
+.btn-add{background:#f43f5e;color:#fff}
+.btn-add:hover{background:#e1324e}
+.btn-edit{background:#3b82f6;color:#fff}
+.btn-del{background:#4b5563;color:#fff}
+.btn-del:hover{background:#374151}
+
+.item{padding:18px;border-bottom:1px solid #272b38}
+.item:last-child{border-bottom:none}
+.item-title{font-size:16px;font-weight:500;margin-bottom:8px}
+.item-url{font-size:13px;color:#9ca3af;word-break:break-all;margin-bottom:12px}
+.empty{text-align:center;padding:40px;color:#9ca3af;font-size:14px}
+footer{text-align:center;margin-top:40px;color:#6b7280;font-size:13px}
+</style>
+</head>
+<body>
+<div class="container">
+<nav>
+<div class="logo">视频管理后台</div>
+<div class="nav-links">
+<a href="index.html">首页</a>
+<a href="admin.html">后台</a>
+</div>
+</nav>
+
+<div class="card">
+<h2>添加新视频</h2>
+<input type="text" id="title" placeholder="输入视频标题">
+<input type="text" id="url" placeholder="输入MP4视频播放链接">
+<button class="btn btn-add" onclick="addVideo()">添加视频</button>
+</div>
+
+<div class="card">
+<h2>视频列表管理</h2>
+<div id="list"></div>
+</div>
+
+<footer>© 2026 高清视频点播 · 后台管理系统</footer>
+</div>
+
+<script>
+const KEY="video_list";
+function loadList(){
+  const list=JSON.parse(localStorage.getItem(KEY))||[];
+  const box=document.getElementById("list");
+  if(list.length===0){box.innerHTML="<div class='empty'>暂无视频，请添加</div>";return;}
+  let html="";
+  list.forEach((item,i)=>{
+    html+=`
+    <div class="item">
+      <div class="item-title">${item.title}</div>
+      <div class="item-url">${item.url}</div>
+      <button class="btn btn-edit" onclick="editVideo(${i})">修改标题</button>
+      <button class="btn btn-del" onclick="delVideo(${i})">删除</button>
+    </div>`;
+  });
+  box.innerHTML=html;
+}
+function addVideo(){
+  const t=document.getElementById("title").value.trim();
+  const u=document.getElementById("url").value.trim();
+  if(!t||!u){alert("请填写标题和播放链接");return}
+  const list=JSON.parse(localStorage.getItem(KEY))||[];
+  list.push({title:t,url:u});
+  localStorage.setItem(KEY,JSON.stringify(list));
+  document.getElementById("title").value="";
+  document.getElementById("url").value="";
+  loadList();alert("添加成功，首页自动同步");
+}
+function editVideo(i){
+  const list=JSON.parse(localStorage.getItem(KEY))||[];
+  const nt=prompt("输入新标题",list[i].title);
+  if(nt&&nt.trim()){list[i].title=nt.trim();localStorage.setItem(KEY,JSON.stringify(list));loadList();}
+}
+function delVideo(i){
+  if(!confirm("确定删除？"))return;
+  const list=JSON.parse(localStorage.getItem(KEY))||[];
+  list.splice(i,1);
+  localStorage.setItem(KEY,JSON.stringify(list));
+  loadList();
+}
+window.onload=loadList;
+</script>
+</body>
+</html>
